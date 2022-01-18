@@ -7,6 +7,8 @@ using Unity.Netcode;
 public class PlayerTestPlayerController : NetworkBehaviour
 {
     [SerializeField] private float speed = 1.0f;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private float bulletSpawnDistance = 2.0f;
 
     private Rigidbody rb;
     private PlayerControls playerControls;
@@ -65,6 +67,26 @@ public class PlayerTestPlayerController : NetworkBehaviour
         playerControls.Player.Enable();
 
         playerControls.Player.Jump.performed += Jump_performed;
+        playerControls.Player.Shoot.performed += Shoot_performed;
+    }
+
+    private void Shoot_performed(InputAction.CallbackContext obj)
+    {
+        // Spawn a prefab on the server and add it to all client worlds
+        if(IsLocalPlayer)
+        {
+            SpawnBullet_ServerRPC(transform.position);
+        }
+    }
+
+    [ServerRpc]
+    private void SpawnBullet_ServerRPC(Vector3 playerPosition)
+    {
+        var gameObject = Instantiate(bulletPrefab,
+            playerPosition + (Vector3.forward * bulletSpawnDistance),
+            Quaternion.identity);
+
+        gameObject.GetComponent<NetworkObject>().Spawn(true);
     }
 
     private void Jump_performed(InputAction.CallbackContext obj)
