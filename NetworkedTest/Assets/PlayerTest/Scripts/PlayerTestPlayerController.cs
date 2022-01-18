@@ -10,6 +10,10 @@ public class PlayerTestPlayerController : NetworkBehaviour
 
     private Rigidbody rb;
     private PlayerControls playerControls;
+    private Camera followCam;
+    private TextMesh healthText;
+
+    private int healthPoints = 100;
 
     // Awake is called before start
     private void Awake()
@@ -17,15 +21,30 @@ public class PlayerTestPlayerController : NetworkBehaviour
         SetupPlayerInput();
 
         rb = GetComponent<Rigidbody>();
+        followCam = GetComponentInChildren<Camera>();
+        healthText = GetComponentInChildren<TextMesh>();
     }
 
     // Start is called before the first frame update
     private void Start()
     {
+        // Disable cameras of other players
+        if(!IsLocalPlayer)
+        {
+            followCam.gameObject.SetActive(false);
+        }
+
+        // Set health value
+        healthText.text = "Health: " + healthPoints.ToString();
     }
 
     // Update is called once per frame
     private void Update()
+    {
+    }
+
+    // LateUpdate is called after all update functions have been called
+    private void LateUpdate()
     {
     }
 
