@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using Unity.Netcode;
 
 public class Spawn : MonoBehaviour
@@ -19,6 +20,9 @@ public class Spawn : MonoBehaviour
 
     private void OnGUI()
     {
+        // Remember using UnityEngine.Networking;
+        //NetworkManager.Singleton.GetComponent<Unity.Netcode.Transports.UNET.UNetTransport>().ConnectAddress = 192.bla.bla.bla.ToString();
+
         GUILayout.BeginArea(new Rect(10, 10, 75, 75));
 
         // If we are not a server or a client
